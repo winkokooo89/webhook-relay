@@ -11,7 +11,7 @@ JENKINS_URL = os.environ['JENKINS_URL']
 SQS_QUEUE_URL = os.environ['SQS_QUEUE_URL']
 SQS_REGION = os.environ['SQS_REGION']
 
-sqs = boto3.resource('sqs', region_name=SQS_REGION)
+sqs = boto3.client('sqs', region_name=SQS_REGION)
 
 print("Webhook consumer starting up!")
 
