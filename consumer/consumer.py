@@ -8,17 +8,18 @@ import boto3
 import requests
 
 JENKINS_URL = os.environ['JENKINS_URL']
-SQS_QUEUE = os.environ['SQS_QUEUE']
+SQS_QUEUE_URL = os.environ['SQS_QUEUE_URL']
 SQS_REGION = os.environ['SQS_REGION']
 
 sqs = boto3.resource('sqs', region_name=SQS_REGION)
-queue = sqs.get_queue_by_name(QueueName=SQS_QUEUE)
 
 print("Webhook consumer starting up!")
 
 while True:
-    for message in queue.receive_messages(
-            WaitTimeSeconds=20, MaxNumberOfMessages=10):
+    for message in sqs.receive_message(
+            QueueUrl=SQS_QUEUE_URL,
+            WaitTimeSeconds=20,
+            MaxNumberOfMessages=10):
         print(f"Got message: {message.message_id} at {datetime.datetime.now().isoformat()}")
         parsed = json.loads(message.body)
         original_headers = parsed['headers']
