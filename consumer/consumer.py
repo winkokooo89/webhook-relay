@@ -20,8 +20,9 @@ while True:
             QueueUrl=SQS_QUEUE_URL,
             WaitTimeSeconds=20,
             MaxNumberOfMessages=10):
-        print(f"Got message: {message.message_id} at {datetime.datetime.now().isoformat()}")
-        parsed = json.loads(message.body)
+        
+        print(f"Got message: {message} at {datetime.datetime.now().isoformat()}")
+        parsed = json.loads(message["Body"])
         original_headers = parsed['headers']
         payload = parsed['payload']
 
@@ -40,6 +41,9 @@ while True:
         print(resp.text)
 
         # Delete the message if we made it this far.
-        message.delete()
+        sqs.delete_message(
+            QueueUrl=SQS_QUEUE_URL,
+            ReceiptHandle=message['ReceiptHandle']
+        )
 
     time.sleep(5)
