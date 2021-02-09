@@ -19,7 +19,7 @@ while True:
     for message in sqs.receive_message(
             QueueUrl=SQS_QUEUE_URL,
             WaitTimeSeconds=20,
-            MaxNumberOfMessages=10):
+            MaxNumberOfMessages=10)["Messages"]:
         
         print(f"Got message: {message} at {datetime.datetime.now().isoformat()}")
         parsed = json.loads(message["Body"])
